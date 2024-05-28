@@ -1,0 +1,10 @@
+.avatarImage {
+  width: 100px;
+}
+
+.userAvatarAndName {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: end;
+}

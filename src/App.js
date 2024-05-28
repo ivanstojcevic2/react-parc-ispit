@@ -1,23 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState } from "react";
+import Login from "./components/login/Login";
+import User from "./components/user/User";
+import styles from "./Style.module.css";
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [repos, setRepos] = useState([]);
+
+  const fetchUserData = async (username) => {
+    try {
+      const userResponse = await fetch(
+        `https://api.github.com/users/${username}`
+      );
+      const userData = await userResponse.json();
+      setUser(userData);
+
+      const reposResponse = await fetch(
+        `https://api.github.com/users/${username}/repos`
+      );
+      const reposData = await reposResponse.json();
+      setRepos(reposData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.container}>
+      <div className={styles.loginForm}>
+        {user ? (
+          <User user={user} repos={repos} />
+        ) : (
+          <Login onSubmit={fetchUserData} />
+        )}
+      </div>
     </div>
   );
 }
